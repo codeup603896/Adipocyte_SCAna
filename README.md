@@ -1,6 +1,6 @@
 # Adipocyte_SCAna
 
-Scripts for processing single adipose tissue cells RNA-Seq 10X Genomics Data
+Scripts for processing single-nucleus adipose tissue cells RNA-Seq 10X Genomics Data
 
 The 35 Clusters of total adipose tissue cells were determined by the package "Seurat" in R using the following parameters: FindClusters(Data,resolution=0.8)
 
