@@ -80,7 +80,8 @@ dot=DotPlot(scRNA4SeJeAPFBOEC, features = c(genes),group.by='celltype2')
 dotdata=dot$data
 write.csv('scRNA4SeJeAPFBOEC_expression.csv',dotdata)
 
-# filt expression result
+# filt expression result 
+# 1) FBO%/AP*% > 2; 2) EC%/AP*% < 0.8 (to reduce the likelihood of endothelial transdifferentiation.); Secondary filters: 1) AP* expression ≥ 15% of cells; 2) FBO%/AP*% > 3.
 library(readxl)
 library(ggplot2)
 library(ggrepel)
@@ -294,3 +295,4 @@ p <- ggplot(df, aes(x = `pct.exp-AP4`, y = perFCFBOvsAP4)) +
   )
 
 ggsave(filename = 'point49gene.pdf',plot=p,width = 6,height = 6)
+
