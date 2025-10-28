@@ -1,4 +1,4 @@
-setwd('D:/wmy/project/临时/脂肪单细胞复现202592/')
+setwd('/path/publicdataana/')
 all_files<- list.files('./data/')
 library(Seurat)
 library(DoubletFinder)
@@ -48,17 +48,15 @@ for (i in 1:length(sobj_list)) {
   temp <- FindClusters(temp, verbose = FALSE)
   DimPlot(temp, label = TRUE) + NoLegend()
   
-  sweep.res <- paramSweep_v3(temp, PCs = pc.num, sct = T) # sct也可以选择T
+  sweep.res <- paramSweep_v3(temp, PCs = pc.num, sct = T) 
   sweep.stats <- summarizeSweep(sweep.res, GT = FALSE)
   bcmvn <- find.pK(sweep.stats)
   pK_bcmvn <- bcmvn$pK[which.max(bcmvn$BCmetric)] %>% as.character() %>% as.numeric()
   
-  # 计算homotypic doublets的比例和预期的doublet数目
   homotypic.prop <- modelHomotypic(temp$seurat_clusters)   
   nExp_poi <- round(DoubletRate * ncol(temp))
   nExp_poi.adj <- round(nExp_poi * (1 - homotypic.prop))
   
-  # 使用确定的参数鉴定doublets
   temp <- doubletFinder_v3(temp,
                            PCs = pc.num,
                            pN = 0.25,
@@ -209,14 +207,15 @@ colnames(sobjOWEC@meta.data)[length(colnames(sobjOWEC@meta.data))]='REACTOME_VEG
 library(ggpubr)
 ggviolin(sobjOWEC@meta.data,
          x="group",y="REACTOME_VEGF_LIGAND_RECEPTOR_INTERACTIONS",
-         width=0.8,color="black",#轮廓颜色
-         fill="group",#填充
-         xlab=F,#不显示x轴的标签
+         width=0.8,color="black",
+         fill="group",
+         xlab=F,
          add='mean_sd',
-         bxp.errorbar=T,#显示误差条
-         bxp.errorbar.width=0.05,#误差条大小
-         size=0.5,#箱型图边线的粗细
+         bxp.errorbar=T,
+         bxp.errorbar.width=0.05,
+         size=0.5,
          palette="npg",
          legend="right")
 ggsave(filename="genesetsScoreviolin.pdf",width=4,height=3)
+
 
