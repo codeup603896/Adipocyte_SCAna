@@ -23,20 +23,20 @@ backports_1.5.0	R6_2.6.1	lazyeval_0.2.2	uwot_0.2.3	GetoptLong_1.0.5	withr_3.0.2	
 
 ## Scripts for processing single-nucleus adipose tissue cells RNA-Seq 10X Genomics Data
 
-## **Batch Correction and Data Integration**
+### **Batch Correction and Data Integration**
 we used the reciprocal PCA integration approach on the 2000 most variable features to combine the nuclei from each sample. We first found the integration anchors with the FindIntegrationAnchors function then used the IntegrateData function in Seurat v4 to integrate all our filtered nuclei.
 Dimension reduction and unsupervised clustering
 The integrated dataset was scaled using the ScaleData function in Seurat. First, PCA dimensionality reduction analyses were done to identify 30 principal components (PCs). To further reduce the dimensionality and cluster our nuclei by their gene expression profile, we conducted UMAP analyses on the 30 PCs with highest standard deviation with RunUMAP function in Seurat. Then, we clustered our cells using FindNeighbors (reduction = "pca", dims = 1:30) and FindClusters (resolution = 0.8) function in Seurat.
 
-## **Pathway Activity Scoring via AUCell**
+### **Pathway Activity Scoring via AUCell**
 Adipose-related pathway activities were quantified at single-cell resolution using AUCell(version 1.24.0). Genes within each cell were ranked by expression, and the area under the curve (AUC) for cumulative distributions of predefined gene sets was computed. Scores were stored as an assay in the Seurat object and visualized via Dotplot to compare pathway activities across cell types.
 Intercellular Communication Analysis with CellChat
 CellChat (version 1.6.0) inferred ligand-receptor-mediated communication networks by integrating expression data with a curated interaction database. Interaction weights were derived from ligand/receptor co-expression and pathway hierarchy. Network significance was assessed using permutation tests (1,000 iterations), and the Trimean-L/R model quantified signal transmission strength. Secreted signaling networks centered on adipocyte progenitors were analyzed to elucidate adipocyte-microenvironment crosstalk. By assigning a cell communication probability value to each interaction and conducting permutation tests, we inferred biologically meaningful cell-cell communication.
 
-## **Gene Set Variation Analysis (GSVA)**
+### **Gene Set Variation Analysis (GSVA)**
 The GSVA R package (v1.48.0) evaluated enrichment scores for IGF- and VEGF-related pathways across cell types. This non-parametric method identified gene sets with significant expression variation by comparing their ranked expression profiles to a background model.
 
-## **Pseudotime Trajectory Inference Using Monocle2**
+### **Pseudotime Trajectory Inference Using Monocle2**
 First we do batch correction and data integration and dimensionality reduction clustering of adipocytes in brown adipose tissue.Then, the top 2000 highly variable aenes (HVGs were selected by the FindvariableFeatures function (Seurat) with the parameter selection.method = "vst". Efectsof the total UMI count and mitochondrial gene percentage were then regressed out from the HVG expression matrix with the ScaleData function (Seurat). The principal component analysis was then performed by the RunPCA function (Seurat) on the scaled HVG expression matrix, To further reduce the dimensionality and cluster our nuclei by their gene expression profile, we conducted UMAP analyses on the 30 PCs with highest standard deviation with RunUMAP function in Seurat. Then, we clustered our cells using FindNeighbors (reduction = "pca", dims = 1:30) and FindClusters (resolution = 0.3) function in Seurat.Cell differentiation trajectories were reconstructed with Monocle2 (v2.26.0). After dimensionality reduction via DDRTree, a minimum spanning tree (MST) was constructed to order cells along pseudotime. Branch points and dynamic gene expression patterns were identified to delineate AP differentiation into myofibroblasts (FBOs) and characterize AP subpopulation trajectories.
 
 The 35 Clusters of total adipose tissue cells were determined by the package "Seurat" in R using the following parameters: FindClusters(Data,resolution=0.8)
