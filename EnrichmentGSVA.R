@@ -1,11 +1,10 @@
-# gsva分析
 library(progeny)
 library(readr)
 library(pheatmap)
 library(tibble)
 library(GSVA)
 
-# 棕色 myoFB
+# brown FBO
 genelist<- list.files('./gmtps/')
 fgsea_sets<- list()
 for (i in 1:length(genelist)) {
@@ -15,16 +14,16 @@ for (i in 1:length(genelist)) {
   
 }
 
-scRNA4SeJemyoFB=subset(x=scRNA4SeJe,subset=(cellType == "myoFB"))
-data=scRNA4SeJemyoFB@assays$RNA@data
+scRNA4SeJeFBO=subset(x=scRNA4SeJe,subset=(cellType == "FBO"))
+data=scRNA4SeJeFBO@assays$RNA@data
 
 expr=as.matrix(data) 
 kegg <- gsva(expr, fgsea_sets, kcdf="Gaussian",method = "gsva",parallel.sz=10) #gsva
-write.csv(file='scRNA4SeJemyoFBkegg.csv',kegg)
-# p=pheatmap(kegg)#绘制热图
-Idents(scRNA4SeJemyoFB)='orig.ident'
-CellsClusters <- data.frame(Cell = names(Idents(scRNA4SeJemyoFB)), 
-                            CellType = as.character(Idents(scRNA4SeJemyoFB)),
+write.csv(file='scRNA4SeJeFBOkegg.csv',kegg)
+
+Idents(scRNA4SeJeFBO)='orig.ident'
+CellsClusters <- data.frame(Cell = names(Idents(scRNA4SeJeFBO)), 
+                            CellType = as.character(Idents(scRNA4SeJeFBO)),
                             stringsAsFactors = FALSE)
 kegg_scores_df <- as.data.frame(t(kegg)) %>% rownames_to_column("Cell") %>% gather(Pathway, Activity, -Cell)
 kegg_scores_df <- inner_join(kegg_scores_df, CellsClusters)
@@ -48,11 +47,10 @@ progeny_hmap = pheatmap(t(summarized_kegg_scores_df),fontsize=16,
                         color=myColor, 
                         main = "GSVA", angle_col = 0,
                         treeheight_col = 0,  border_color = NA)
-ggsave('SeJe-myoFB-gsva_hmap.pdf',progeny_hmap,height=6,width=10)
+ggsave('SeJe-FBO-gsva_hmap.pdf',progeny_hmap,height=6,width=10)
 
-# 棕色 EC
+# brown EC
 genelist<- list.files('./gmtps/')
-
 fgsea_sets<- list()
 for (i in 1:length(genelist)) {
   dir<- paste0('./gmtps/',genelist[i])
@@ -66,7 +64,6 @@ data=scRNA4SeJeEC@assays$RNA@data
 expr=as.matrix(data) 
 kegg <- gsva(expr, fgsea_sets, kcdf="Gaussian",method = "gsva",parallel.sz=10) #gsva
 write.csv(file='scRNA4SeJeECkegg.csv',kegg)
-# p=pheatmap(kegg)#绘制热图
 Idents(scRNA4SeJeEC)='orig.ident'
 CellsClusters <- data.frame(Cell = names(Idents(scRNA4SeJeEC)), 
                             CellType = as.character(Idents(scRNA4SeJeEC)),
@@ -95,26 +92,24 @@ progeny_hmap = pheatmap(t(summarized_kegg_scores_df),fontsize=16,
                         treeheight_col = 0,  border_color = NA)
 ggsave('SeJe-EC-gsva_hmap.pdf',progeny_hmap,height=6,width=10)
 
-# 米色 myoFB
+# beige FBO
 genelist<- list.files('./gmtps/')
 fgsea_sets<- list()
 for (i in 1:length(genelist)) {
   dir<- paste0('./gmtps/',genelist[i])
   temp<- read.gmt(dir)
   fgsea_sets[[names(table(temp$term))]]<- temp$gene
-  
 }
 
-scRNA4SiJimyoFB=subset(x=scRNA4SiJi,subset=(cellType == "myoFB"))
-data=scRNA4SiJimyoFB@assays$RNA@data
+scRNA4SiJiFBO=subset(x=scRNA4SiJi,subset=(cellType == "FBO"))
+data=scRNA4SiJiFBO@assays$RNA@data
 
 expr=as.matrix(data) 
 kegg <- gsva(expr, fgsea_sets, kcdf="Gaussian",method = "gsva",parallel.sz=10) #gsva
-write.csv(file='scRNA4SiJimyoFBkegg.csv',kegg)
-# p=pheatmap(kegg)#绘制热图
-Idents(scRNA4SiJimyoFB)='orig.ident'
-CellsClusters <- data.frame(Cell = names(Idents(scRNA4SiJimyoFB)), 
-                            CellType = as.character(Idents(scRNA4SiJimyoFB)),
+write.csv(file='scRNA4SiJiFBOkegg.csv',kegg)
+Idents(scRNA4SiJiFBO)='orig.ident'
+CellsClusters <- data.frame(Cell = names(Idents(scRNA4SiJiFBO)), 
+                            CellType = as.character(Idents(scRNA4SiJiFBO)),
                             stringsAsFactors = FALSE)
 kegg_scores_df <- as.data.frame(t(kegg)) %>% rownames_to_column("Cell") %>% gather(Pathway, Activity, -Cell)
 kegg_scores_df <- inner_join(kegg_scores_df, CellsClusters)
@@ -132,17 +127,15 @@ summarized_kegg_scores_df <- summarized_progeny_scores %>%
 
 paletteLength = 100
 myColor = colorRampPalette(c("Darkblue", "white","red"))(paletteLength)
-
 progeny_hmap = pheatmap(t(summarized_kegg_scores_df),fontsize=16, 
                         fontsize_row = 16, 
                         color=myColor, 
                         main = "GSVA", angle_col = 0,
                         treeheight_col = 0,  border_color = NA)
-ggsave('SiJi-myoFB-gsva_hmap.pdf',progeny_hmap,height=6,width=10)
+ggsave('SiJi-FBO-gsva_hmap.pdf',progeny_hmap,height=6,width=10)
 
-# # 米色 EC
+# beige EC
 genelist<- list.files('./gmtps/')
-
 fgsea_sets<- list()
 for (i in 1:length(genelist)) {
   dir<- paste0('./gmtps/',genelist[i])
@@ -156,7 +149,7 @@ data=scRNA4SiJiEC@assays$RNA@data
 expr=as.matrix(data) 
 kegg <- gsva(expr, fgsea_sets, kcdf="Gaussian",method = "gsva",parallel.sz=10) #gsva
 write.csv(file='scRNA4SiJiECkegg.csv',kegg)
-# p=pheatmap(kegg)#绘制热图
+
 Idents(scRNA4SiJiEC)='orig.ident'
 CellsClusters <- data.frame(Cell = names(Idents(scRNA4SiJiEC)), 
                             CellType = as.character(Idents(scRNA4SiJiEC)),
@@ -184,4 +177,5 @@ progeny_hmap = pheatmap(t(summarized_kegg_scores_df),fontsize=16,
                         main = "GSVA", angle_col = 0,
                         treeheight_col = 0,  border_color = NA)
 ggsave('SiJi-EC-gsva_hmap.pdf',progeny_hmap,height=6,width=10)
+
 
