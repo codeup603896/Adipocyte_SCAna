@@ -1,4 +1,4 @@
-# Adipocyte_SCAna
+# Adipocyte_SnAna
 
 ### Analyze the environment and software version
 R version 4.3.2 (2023-10-31)
